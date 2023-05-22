@@ -24,7 +24,7 @@ def main():
             # フレームをJPEG形式にエンコード
             _, img_encode = cv2.imencode('.jpg', frame)
             # 画像を分割する
-            for i in np.array_split(img_encode, 15):
+            for i in np.array_split(img_encode, 20):
                 # 画像の送信
                 udp.sendto(i.tobytes(), to_send_addr)
             # 画像の区切りとして__end__を送信
