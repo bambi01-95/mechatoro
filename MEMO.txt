@@ -1,0 +1,3 @@
+fpsは１５が好ましい。
+    # print(cap.get(cv2.CAP_PROP_FPS))でfps値を確認して、３０ならcap.set(cv2.CAP_PROP_FPS,15)を
+    すると良い。それでも変わらないなら、if文で調整すると良い
