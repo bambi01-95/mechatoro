@@ -36,7 +36,7 @@ def recive(udp):
 # フレーム生成・返却する処理
 def main():
     udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    udp.bind(('172.31.32.64', 8080))
+    udp.bind(('172.31.32.64',8080))
     
     # 画像を取り続ける
     for img in recive(udp):
