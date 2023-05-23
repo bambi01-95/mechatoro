@@ -5,7 +5,7 @@ def main():
     # UDPなどのパケット？ソケット？を設定
     udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     # 送信先のIPアドレスとポート番号
-    to_send_addr = ('172.31.33.203', 8008)
+    to_send_addr = ('00.00.00.00', 8008)
     message = "00:00:00:00"
 
     while True:

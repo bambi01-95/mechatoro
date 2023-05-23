@@ -8,10 +8,10 @@ bg_y = 0
 px = 320
 py = 240
 
-send_ip     = '192.168.0.31'
+send_ip     = '00.00.00.00'
 send_port   = 8008
 
-recive_ip   = '192.168.0.31'
+recive_ip   = '000.00.00.00'
 recive_port = 8080
 
 def recive(udp):

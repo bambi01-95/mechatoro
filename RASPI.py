@@ -10,7 +10,7 @@ def send():
     # UDPなどのパケット？ソケット？を設定
     udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     # 送信先のIPアドレスとポート番号
-    to_send_addr = ('192.168.0.31', 8080)
+    to_send_addr = ('00.00.00.00', 8080)
     cap = cv2.VideoCapture(0)
     # cap.set(cv2.CAP_PROP_FPS,10)
     fps15 = 0
@@ -44,7 +44,7 @@ def send():
 
 def recive():
     udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    udp.bind(('192.168.0.31', 8008))
+    udp.bind(('00.00.00.00', 8008))
     buff = 1024 * 64
     p_count = 0
     while True:

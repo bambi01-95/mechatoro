@@ -4,7 +4,7 @@ import socket
 # フレーム生成・返却する処理
 def main():
     udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    udp.bind(('172.31.33.203', 8008))
+    udp.bind(('00.00.00.00', 8008))
     buff = 1024 * 64
 
     while True:
