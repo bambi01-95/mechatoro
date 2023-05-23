@@ -3,14 +3,22 @@
 # pygame: http://westplain.sakura.ne.jp/translate/pygame/Key.cgi#pygame.key.get_pressed
 
 # import keyboard ?
+# import keyboard
 
 
+# while True:
+#     if keyboard.is_pressed("f"):
+#         print("f")
+#         break
+       
 
+
+# ##########################################################
 # https://goodlucknetlife.com/python-pygame-player-move/
 
 import pygame
 import sys
-
+import cv2
 # img_bg = pygame.image.load("bgimage.png")
 # img_player = pygame.image.load("player1.png")
 bg_y = 0
@@ -37,6 +45,11 @@ def move_player(screen,key):
             px = 620
     print("px: ",px,",py: ",py)
 
+# https://stackoverflow.com/questions/19306211/opencv-cv2-image-to-pygame-image
+def cvimage_to_pygame(image):
+    """Convert cvimage into a pygame image"""
+    return pygame.image.frombuffer(image.tostring(), image.shape[1::-1],"BGR")
+
 def main():
     global bg_y
 
@@ -44,13 +57,20 @@ def main():
     pygame.display.set_caption("シューティングゲーム")
     screen = pygame.display.set_mode((640,480))
     clock = pygame.time.Clock()
+    cap = cv2.VideoCapture(0)
 
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
+        ret,frame = cap.read()
+        frame = cv2.resize(frame,(640,480))
+        if cv2.waitKey(25) & 0xFF == ord('q'):
+            break
         key = pygame.key.get_pressed()
+        img = cvimage_to_pygame(frame)
+        screen.blit(img,(0,0))
         move_player(screen,key)
         pygame.display.update()
         clock.tick()
