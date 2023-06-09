@@ -8,10 +8,12 @@ bg_y = 0
 px = 320
 py = 240
 
-send_ip     = '00.00.00.00'
+# kuas@123
+send_ip     = '172.20.10.6'
 send_port   = 8008
 
-recive_ip   = '000.00.00.00'
+# this pc
+recive_ip   = '172.20.10.7'
 recive_port = 8080
 
 def recive(udp):
@@ -45,7 +47,7 @@ def recive(udp):
 
 
 
-
+# キーボード入力を読み取り、エンコードして、相手にデータを送る
 def send_key_input(key,udp,addr):
     global px,py
     if key[pygame.K_UP] == 1:
@@ -64,6 +66,7 @@ def send_key_input(key,udp,addr):
         px = px + 5
         if px > 620:
             px = 620
+
     message = "px: "+ str(px) +" py: "+ str(py)
     message_byte = message.encode()
     udp.sendto(message_byte,addr)
@@ -98,25 +101,25 @@ def main():
 
     # 画像を取り続ける
     for img in recive(udp_recive):
-        h,w = img.shape[:2]
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
-
+        # キーボード入力受け取りとsend
         key     = pygame.key.get_pressed()
         message = send_key_input(key,udp_send,to_send_addr)
 
         # PC上に写す用の写真作成
-        if (h>200)&(w>200):
+        try:
             frame = cv2.resize(img,(640,480))
             data_img = print_text(message)
             dip_img = cv2.vconcat([frame,data_img]) #https://note.nkmk.me/python-opencv-hconcat-vconcat-np-tile/
             img = cvimage_to_pygame(dip_img)
             screen.blit(img,(0,0))
+            pygame.display.update()
+        except cv2.error:
+            print("img empty\n")
         
-        pygame.display.update()
         clock.tick()
         if cv2.waitKey(25) & 0xFF == ord('q'):
             break
