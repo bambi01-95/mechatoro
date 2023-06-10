@@ -8,13 +8,13 @@ bg_y = 0
 px = 320
 py = 240
 
-# kuas@123
-send_ip     = '172.20.10.6'
+# kuas@123 '00.00.00.00'
+send_ip     = '00.00.00.00'
 send_port   = 8008
 
 # this pc
-recive_ip   = '172.20.10.7'
-recive_port = 8080
+recive_ip   = '00.00.00.00'
+recive_port = 8008
 
 def recive(udp):
     buff = 1024 * 64
@@ -66,8 +66,10 @@ def send_key_input(key,udp,addr):
         px = px + 5
         if px > 620:
             px = 620
-
-    message = "px: "+ str(px) +" py: "+ str(py)
+    # 送るデータの形
+    # massage =  "-"+ str(px) +"-"+ str(py)
+    # -> = "-00-00"のようになる
+    message = "-"+ str(px) +"-"+ str(py)
     message_byte = message.encode()
     udp.sendto(message_byte,addr)
     return message

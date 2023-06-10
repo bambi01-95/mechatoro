@@ -9,7 +9,7 @@ def main():
     # UDPなどのパケット？ソケット？を設定
     udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     # 送信先のIPアドレスとポート番号
-    to_send_addr = ('', 8080)
+    to_send_addr = ('00.00.00.00', 8080)
     cap = cv2.VideoCapture(0)
     # cap.set(cv2.CAP_PROP_FPS,10)
     count = 0
@@ -26,7 +26,8 @@ def main():
             # フレームをJPEG形式にエンコード
             _, img_encode = cv2.imencode('.jpg', frame)
             # 画像を分割する
-            for i in np.array_split(img_encode, 5):
+            # udp.sendto(img_encode, to_send_addr)
+            for i in np.array_split(img_encode, 4):
                 # 画像の送信
                 udp.sendto(i.tobytes(), to_send_addr)
                 time.sleep(0.001)

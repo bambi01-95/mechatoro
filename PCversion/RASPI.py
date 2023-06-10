@@ -7,14 +7,15 @@ import cv2
 import time
 from multiprocessing import Process
 
-# kuas@123
+# ml3@kuas '00.00.00.00'
+
 # 相手側
-send_ip     = '172.20.10.6'
+send_ip     = '00.00.00.00'
 send_port   = 8008
 to_send_addr = (send_ip,send_port)
 
 # this pc/RasPi ip & port
-recive_ip   = '172.20.10.7'
+recive_ip   = '00.00.00.00'
 recive_port = 8080
 to_recive_addr = (recive_ip,recive_port)
 
