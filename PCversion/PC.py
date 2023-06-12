@@ -8,11 +8,11 @@ bg_y = 0
 px = 320
 py = 240
 
-# kuas@123 '00.00.00.00'
+# 2.kuas@123 '00.00.00.00'
 send_ip     = '00.00.00.00'
-send_port   = 8008
+send_port   = 8080#8008
 
-# this pc
+# 1.this pc
 recive_ip   = '00.00.00.00'
 recive_port = 8008
 
@@ -20,6 +20,7 @@ def recive(udp):
     buff = 1024 * 64
     while True:
         recive_data = bytes()
+        count = 0
         # 写真データの受け取り
         
         while True:
@@ -29,6 +30,7 @@ def recive(udp):
             is_end = jpg_str == b'__end__'
             if is_len and is_end: 
                 break
+            count += 1
             recive_data += jpg_str
         # 受け取ったデータがなかった時、whileをやり直す
         if len(recive_data) == 0: continue
@@ -42,7 +44,7 @@ def recive(udp):
 
         # uint8のデータを画像データに戻す
         img = cv2.imdecode(narray, 1)
-        yield img
+        yield img,count
 
 
 
@@ -102,7 +104,7 @@ def main():
 
 
     # 画像を取り続ける
-    for img in recive(udp_recive):
+    for img,count in recive(udp_recive):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -113,12 +115,13 @@ def main():
 
         # PC上に写す用の写真作成
         try:
-            frame = cv2.resize(img,(640,480))
-            data_img = print_text(message)
-            dip_img = cv2.vconcat([frame,data_img]) #https://note.nkmk.me/python-opencv-hconcat-vconcat-np-tile/
-            img = cvimage_to_pygame(dip_img)
-            screen.blit(img,(0,0))
-            pygame.display.update()
+            if(count==20):
+                frame = cv2.resize(img,(640,480))
+                data_img = print_text(message)
+                dip_img = cv2.vconcat([frame,data_img]) #https://note.nkmk.me/python-opencv-hconcat-vconcat-np-tile/
+                img = cvimage_to_pygame(dip_img)
+                screen.blit(img,(0,0))
+                pygame.display.update()
         except cv2.error:
             print("img empty\n")
         

@@ -9,12 +9,12 @@ from multiprocessing import Process
 
 # ml3@kuas '00.00.00.00'
 
-# 相手側
+# 1.相手側
 send_ip     = '00.00.00.00'
 send_port   = 8008
 to_send_addr = (send_ip,send_port)
 
-# this pc/RasPi ip & port
+# 2.this pc/RasPi ip & port
 recive_ip   = '00.00.00.00'
 recive_port = 8080
 to_recive_addr = (recive_ip,recive_port)
@@ -42,7 +42,7 @@ def send():
             # フレームをJPEG形式にエンコード
             _, img_encode = cv2.imencode('.jpg', frame)
             # 画像を分割する
-            for i in np.array_split(img_encode, 20):
+            for i in np.array_split(img_encode, 20):# 20 split
                 # 画像の送信
                 udp.sendto(i.tobytes(), to_send_addr)
             # 画像の区切りとして__end__を送信

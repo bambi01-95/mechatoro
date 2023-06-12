@@ -24,20 +24,25 @@ def main():
             break
         # 画像処理などをここに挿入↓
         # print(cap.get(cv2.CAP_PROP_FPS))
-        if count%3==0:
+        if count%2==0:
             # 画像をリサイズする
-            frame = cv2.resize(img, (200,200))
+            frame = cv2.resize(img, (400,400))
             # フレームをJPEG形式にエンコード
             _, img_encode = cv2.imencode('.jpg', frame)
-            # 画像を分割する
+
+            # 画像を分割しない
             # udp.sendto(img_encode, to_send_addr)
-            for i in np.array_split(img_encode, 4):
+
+            #画像を分割
+            for i in np.array_split(img_encode, 16):
                 # 画像の送信
                 udp.sendto(i.tobytes(), to_send_addr)
                 time.sleep(0.001)#0.005はだめだった0.005/0.14くらいを超えたらノイズが現れにくくなった
             # 画像の区切りとして__end__を送信
             udp.sendto(b'__end__', to_send_addr)
+            time.sleep(0.001)
             fps +=1
+
         count +=1
         sec30 +=1
         now = time.perf_counter()
