@@ -7,7 +7,8 @@ import cv2
 import time
 from multiprocessing import Process
 
-# ml3@kuas '00.00.00.00'
+# ml3@kuas 
+# '00.00.00.00'
 
 # 1.相手側
 send_ip     = '00.00.00.00'
