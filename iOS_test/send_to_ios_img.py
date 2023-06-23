@@ -9,7 +9,7 @@ def main():
     # UDPなどのパケット？ソケット？を設定
     udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     # 送信先のIPアドレスとポート番号
-    to_send_addr = ('192.168.0.23', 8080)
+    to_send_addr = ('192.168.50.237', 8080)
     cap = cv2.VideoCapture(0)
     # cap.set(cv2.CAP_PROP_FPS,10)
     count = 0
@@ -23,9 +23,9 @@ def main():
             break
         # 画像処理などをここに挿入↓
         # print(cap.get(cv2.CAP_PROP_FPS))
-        if count%1==0:
+        if count%2==0:
             # 画像をリサイズする
-            frame = cv2.resize(img, (600,300))
+            frame = cv2.resize(img, (200,200))
             # フレームをJPEG形式にエンコード
             _, img_encode = cv2.imencode('.jpg', frame)
 
@@ -33,13 +33,14 @@ def main():
             # udp.sendto(img_encode, to_send_addr)
 
             #画像を分割
-            for i in np.array_split(img_encode, 18):
+            for i in np.array_split(img_encode, 5):
                 # 画像の送信
                 udp.sendto(i.tobytes(), to_send_addr)
-                time.sleep(0.001)#0.005はだめだった0.005/0.14くらいを超えたらノイズが現れにくくなった
+                time.sleep(0.0012)#0.005はだめだった0.005/0.14くらいを超えたらノイズが現れにくくなった
             # 画像の区切りとして__end__を送信
+            time.sleep(0.0012)
             udp.sendto(b'__end__', to_send_addr)
-            time.sleep(0.001)
+
             fps +=1
 
         count +=1

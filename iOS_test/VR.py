@@ -11,7 +11,7 @@ def main():
     # UDPなどのパケット？ソケット？を設定
     udp = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     # 送信先のIPアドレスとポート番号
-    to_send_addr = ('172.20.10.8', 8080)
+    to_send_addr = ('192.168.0.23', 8080)
     cap1 = cv2.VideoCapture(0)
     cap2 = cv2.VideoCapture(1)
     # cap.set(cv2.CAP_PROP_FPS,10)
@@ -29,29 +29,29 @@ def main():
             break
         # 画像処理などをここに挿入↓
         # print(cap.get(cv2.CAP_PROP_FPS))
-        if count%2==0:
-            # 画像をリサイズする
-            img1 = cv2.resize(img1, (300,300))
-            img2 = cv2.resize(img2, (300,300))
+        # if count%1==0:
+        # 画像をリサイズする
+        img1 = cv2.resize(img1, (250,250))
+        img2 = cv2.resize(img2, (250,250))
 
-            vrimg = cv2.hconcat([img1, img2])
-            vr
+        vrimg = cv2.hconcat([img1, img2])
 
-            # フレームをJPEG形式にエンコード
-            _, img_encode = cv2.imencode('.jpg', vrimg)
+        # フレームをJPEG形式にエンコード
+        _, img_encode = cv2.imencode('.jpg', vrimg)
 
-            # 画像を分割しない
-            # udp.sendto(img_encode, to_send_addr)
+        # 画像を分割しない
+        # udp.sendto(img_encode, to_send_addr)
 
-            #画像を分割
-            for i in np.array_split(img_encode, 18):
-                # 画像の送信
-                udp.sendto(i.tobytes(), to_send_addr)
-                time.sleep(0.001)#0.005はだめだった0.005/0.14くらいを超えたらノイズが現れにくくなった
-            # 画像の区切りとして__end__を送信
-            udp.sendto(b'__end__', to_send_addr)
-            time.sleep(0.001)
-            fps +=1
+        #画像を分割
+        for i in np.array_split(img_encode, 14):
+            # 画像の送信
+            udp.sendto(i.tobytes(), to_send_addr)
+            time.sleep(0.001)#0.005はだめだった0.005/0.14くらいを超えたらノイズが現れにくくなった
+        # 画像の区切りとして__end__を送信
+        time.sleep(0.001)
+        udp.sendto(b'__end__', to_send_addr)
+
+        fps +=1
 
         count +=1
         sec30 +=1

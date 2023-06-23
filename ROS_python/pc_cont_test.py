@@ -29,64 +29,55 @@ send_port   = 8008#8008
 # キーボード入力を読み取り、エンコードして、相手にデータを送る
 def send_key_input(key,udp,addr):
     global L_motor,R_motor,step
+    L_out = 0
+    R_out = 0
     # key[???] ??? -> https://www.pygame.org/docs/ref/key.html
+    if key[pygame.K_w] == 1:
+        L_out = L_motor
+        R_out = R_motor
+
     if key[pygame.K_a] == 1:
-        L_motor = L_motor - 2
+        R_out = R_motor
+        if L_out != 0:
+            L_out = int(L_out/2)
+
+    if key[pygame.K_d] == 1:
+        L_out = L_motor
+        if R_out != 0:
+            R_out = int(R_out / 2)
+        
+    if key[pygame.K_s] == 1:
+        L_motor *= -1
+        R_motor *= -1
+
+    if (key[pygame.K_c] == 1) & (key[pygame.K_LCTRL] == 1):
+        print("C + cotrol: FINISH!")
+        exit(1)
+    
+    if (key[pygame.K_i] == 1):
+        L_motor += 10
+        R_motor += 10
+        if 50 < L_motor:
+            L_motor = 50
+            R_motor = 50
+
+    if (key[pygame.K_j] == 1):
+        L_motor -= 10
+        R_motor -= 10
         if L_motor < 0:
             L_motor = 0
-    if key[pygame.K_d] == 1:
-        R_motor = R_motor - 2
-        if R_motor < 0:
             R_motor = 0
 
-    if key[pygame.K_q] == 1:
-        L_motor = 5
-        R_motor = 30
-    if key[pygame.K_e] == 1:
-        L_motor = 30
-        R_motor = 5
-
-    if key[pygame.K_w] == 1:
-        if(L_motor==R_motor):
-            L_motor = L_motor + step
-            R_motor = R_motor + step
-            if L_motor > 40:
-                L_motor = 40
-            if R_motor > 40:
-                R_motor = 40
-        elif(R_motor>L_motor):
-            L_motor = L_motor + step
-        else:
-            R_motor = R_motor + step
-
-
-    if key[pygame.K_s] == 1:
-        if(L_motor==R_motor):
-            L_motor = L_motor - step
-            R_motor = R_motor - step
-            if L_motor < 0:
-                L_motor = 0
-            if R_motor < 0:
-                R_motor = 0
-        elif(R_motor>L_motor):
-            R_motor = R_motor - step
-        else:
-            L_motor = L_motor - step
-    if key[pygame.K_j] == 1:
-        exit(1)
-
-
-    if key[pygame.K_f] == 1:
-        R_motor = 10
-        L_motor = 10
     # 送るデータの形
     # Lmotor Rmotor
-    message = str(L_motor) +","+ str(R_motor)                   #check
-    text    = "L motor: " + str(L_motor) + " R motor: " + str(R_motor) 
+    message = str(L_out) +","+ str(R_out)                   #check
+
+    settext  = "setting L motor: " + str(L_motor) + " R motor: " + str(R_motor) 
+    outtext  = "output  L motor: " + str(L_out)   + " R motor: " + str(R_out) 
     print(message)
     message_byte = message.encode()
     udp.sendto(message_byte,addr)
-    return text
+    return settext,outtext
 
 # https://stackoverflow.com/questions/19306211/opencv-cv2-image-to-pygame-image
 # openCV配列からpygame配列へ変換する
@@ -95,9 +86,10 @@ def cvimage_to_pygame(image):
     return pygame.image.frombuffer(image.tostring(), image.shape[1::-1],"BGR")
 
 # speedなどのデータを画像に書き込む
-def print_text(message):
+def print_text(settext,outtext):
     img = np.zeros((100,frame_size,3), np.uint8)                                   #check
-    cv2.putText(img,message,(50,50),0,0.6,(0,255,0),1,cv2.LINE_4)
+    cv2.putText(img,settext,(50,50),0,0.6,(0,255,0),1,cv2.LINE_4)
+    cv2.putText(img,outtext,(50,75),0,0.6,(0,255,0),1,cv2.LINE_4)
     return img
 
 def main():
@@ -111,6 +103,7 @@ def main():
     udp_send = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     to_send_addr = (send_ip,send_port)
 
+#if you need
     test = cv2.imread('inst1.png')
     nstruction = cv2.resize(test,(frame_size,frame_size+100))
     
@@ -123,14 +116,14 @@ def main():
                 sys.exit()
         # キーボード入力受け取りとsend
         key     = pygame.key.get_pressed()
-        message = send_key_input(key,udp_send,to_send_addr)
+        settext,outtext = send_key_input(key,udp_send,to_send_addr)
 
-        data_img = print_text(message)
+        data_img = print_text(settext,outtext)
         v_img = cv2.vconcat([black_img,data_img]) #https://note.nkmk.me/python-opencv-hconcat-vconcat-np-tile/
         v_img = cv2.resize(v_img,(frame_size,frame_size+100))
-        h_img = cv2.hconcat([v_img,nstruction])
+        h_img = cv2.hconcat([v_img,nstruction])#if you need
 
-        img = cvimage_to_pygame(h_img)
+        img = cvimage_to_pygame(h_img)#if you need
         screen.blit(img,(0,0))
         pygame.display.update()
         time.sleep(0.05)
