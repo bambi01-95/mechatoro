@@ -4,6 +4,7 @@ import cv2
 import socket
 import numpy as np
 import time
+
 bg_y = 0
 L_motor = 10
 R_motor = 10
