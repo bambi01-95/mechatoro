@@ -97,12 +97,15 @@ def main():
 
     pygame.init()
     pygame.display.set_caption("RASPI_CAMERA")
-    screen = pygame.display.set_mode((frame_size,frame_size+100))                            #check
+    screen = pygame.display.set_mode((frame_size + frame_size,frame_size+100))                            #check
     clock = pygame.time.Clock()
 
     udp_send = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     to_send_addr = (send_ip,send_port)
 
+#if you need
+    test = cv2.imread('inst1.png')
+    nstruction = cv2.resize(test,(frame_size,frame_size+100))
     
     # 画像を取り続ける
     # for img,count in recive(udp_recive):
@@ -118,7 +121,9 @@ def main():
         data_img = print_text(settext,outtext)
         v_img = cv2.vconcat([black_img,data_img]) #https://note.nkmk.me/python-opencv-hconcat-vconcat-np-tile/
         v_img = cv2.resize(v_img,(frame_size,frame_size+100))
-        img = cvimage_to_pygame(v_img)#if you need
+        h_img = cv2.hconcat([v_img,nstruction])#if you need
+
+        img = cvimage_to_pygame(h_img)#if you need
         screen.blit(img,(0,0))
         pygame.display.update()
         time.sleep(0.05)

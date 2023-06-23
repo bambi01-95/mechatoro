@@ -13,7 +13,6 @@ frame_size = 800
 
 black_img = np.zeros((frame_size,frame_size,3), np.uint8)  
 
-
 # cv2.imshow("this",nstruction)
 # cv2.waitKey(0)
 # cv2.destroyAllWindows()
@@ -62,66 +61,55 @@ def recive(udp):
 def send_key_input(key,udp,addr):
     global L_motor,R_motor,step
     # key[???] ??? -> https://www.pygame.org/docs/ref/key.html
+    L_out = 0
+    R_out = 0
+    # key[???] ??? -> https://www.pygame.org/docs/ref/key.html
+    if key[pygame.K_w] == 1:
+        L_out = L_motor
+        R_out = R_motor
+
     if key[pygame.K_a] == 1:
-        L_motor = L_motor - 2
+        R_out = R_motor
+        if L_out != 0:
+            L_out = int(L_out/2)
+
+    if key[pygame.K_d] == 1:
+        L_out = L_motor
+        if R_out != 0:
+            R_out = int(R_out / 2)
+        
+    if key[pygame.K_s] == 1:
+        L_motor *= -1
+        R_motor *= -1
+
+    if (key[pygame.K_c] == 1) & (key[pygame.K_LCTRL] == 1):
+        print("C + cotrol: FINISH!")
+        exit(0)
+    
+    if (key[pygame.K_i] == 1):
+        L_motor += 10
+        R_motor += 10
+        if 50 < L_motor:
+            L_motor = 50
+            R_motor = 50
+
+    if (key[pygame.K_j] == 1):
+        L_motor -= 10
+        R_motor -= 10
         if L_motor < 0:
             L_motor = 0
-    if key[pygame.K_d] == 1:
-        R_motor = R_motor - 2
-        if R_motor < 0:
             R_motor = 0
 
-    if key[pygame.K_q] == 1:
-        L_motor = 5
-        R_motor = 30
-    if key[pygame.K_e] == 1:
-        L_motor = 30
-        R_motor = 5
-
-    if key[pygame.K_w] == 1:
-        if(L_motor==R_motor):
-            L_motor = L_motor + step
-            R_motor = R_motor + step
-            if L_motor > 40:
-                L_motor = 40
-            if R_motor > 40:
-                R_motor = 40
-        elif(R_motor>L_motor):
-            L_motor = L_motor + step
-        else:
-            R_motor = R_motor + step
-
-
-    if key[pygame.K_s] == 1:
-        if(L_motor==R_motor):
-            L_motor = L_motor - step
-            R_motor = R_motor - step
-            if L_motor < 0:
-                L_motor = 0
-            if R_motor < 0:
-                R_motor = 0
-        elif(R_motor>L_motor):
-            R_motor = R_motor - step
-        else:
-            L_motor = L_motor - step
-    if key[pygame.K_j] == 1:
-        exit(1)
-
-
-    if key[pygame.K_f] == 1:
-        R_motor = 10
-        L_motor = 10
-
-    if key[pygame.K_j] == 1:
-        exit(1)
     # 送るデータの形
     # Lmotor Rmotor
-    message = str(L_motor) +","+ str(R_motor)                   #check
-    text    = "L motor: " + str(L_motor) + " R motor: " + str(R_motor) 
+    message = str(L_out) +","+ str(R_out)                   #check
+
+    settext  = "setting L motor: " + str(L_motor) + " R motor: " + str(R_motor) 
+    outtext  = "output  L motor: " + str(L_out)   + " R motor: " + str(R_out) 
 
     message_byte = message.encode()
     udp.sendto(message_byte,addr)
-    return text
+    return settext,outtext
 
 # https://stackoverflow.com/questions/19306211/opencv-cv2-image-to-pygame-image
 # openCV配列からpygame配列へ変換する
@@ -130,9 +118,10 @@ def cvimage_to_pygame(image):
     return pygame.image.frombuffer(image.tostring(), image.shape[1::-1],"BGR")
 
 # speedなどのデータを画像に書き込む
-def print_text(message):
+def print_text(settext,outtext):
     img = np.zeros((100,frame_size,3), np.uint8)                                   #check
-    cv2.putText(img,message,(50,50),0,0.6,(0,255,0),1,cv2.LINE_4)
+    cv2.putText(img,settext,(50,50),0,0.6,(0,255,0),1,cv2.LINE_4)
+    cv2.putText(img,outtext,(50,75),0,0.6,(0,255,0),1,cv2.LINE_4)
     return img
 
 def main():
@@ -160,8 +149,8 @@ def main():
                 sys.exit()
         # キーボード入力受け取りとsend
         key     = pygame.key.get_pressed()
-        message = send_key_input(key,udp_send,to_send_addr)
-        data_img = print_text(message)
+        settext,outtext = send_key_input(key,udp_send,to_send_addr)
+        data_img = print_text(settext,outtext)
         # # PC上に写す用の写真作成
         try:
             if(count==16):                                                  # check
