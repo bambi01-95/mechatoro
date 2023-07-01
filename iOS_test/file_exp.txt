@@ -1,0 +1,4 @@
+convert_VRcap.py: videocapture(0)からの入力を歪ませるテストコード
+convert_VRimg.py: imread("file_name)を歪ませるコード
+oneToTwo.py: 1つのカメラ入力を右目用と左眼用に分けるテストコード
+oneToTwoSend: ↑スマホに送る用のコード
