@@ -19,6 +19,8 @@ def undistort():
     if not ret:
         print("no img get\n")
     h,w = img.shape[:2]
+    mid_w = int(w / 2)
+    mid_h = int(h/ 2)
     print(h,"hw",w)
 
     dist = [-0.1, -0.1,  0, 0 ,-0.1]
@@ -34,11 +36,11 @@ def undistort():
     mtx = np.array([[fx, 0, Cx],[0, fy, Cy],[0, 0, 1]])
 
     # チェスボード画像から算出した歪係数を設定
-    k1 = 0.4
-    k2 = 0.3
+    k1 = 5
+    k2 = 0.
     p1 = 0
     p2 = 0
-    k3 = 0.3
+    k3 = 0.8
     dist = np.array([[k1, k2, p1, p2, k3]])
     newcameramtx, roi = cv2.getOptimalNewCameraMatrix(mtx, dist, (h,h), 1, (h,h))
     while True:
@@ -47,13 +49,8 @@ def undistort():
             break
         h,w = img.shape[:2]
         # img[height,width]
-        imgL= img[:h,:h]
-        imgR= img[:h,150:h+150]
-        # cv2.imshow("left", imgL)
-        # cv2.imshow("right", imgR)
-
-        # frame = cv2.hconcat([imgL,imgR])
-        # cv2.imshow("vr",frame)
+        imgL= img[:h, mid_w-mid_h -75: mid_w+mid_h -75]
+        imgR= img[:h, mid_w-mid_h +75: mid_w+mid_h +75]
         distL = cv2.undistort(imgL, mtx, dist, None, newcameramtx)
         distR = cv2.undistort(imgR, mtx, dist, None, newcameramtx)
         distframe = cv2.hconcat([distL,distR])
