@@ -1,0 +1,6 @@
+bambi01-95 m058　
+2023/07/05
+
+(https://qiita.com/okhrn/items/4d3c74563154f191ba16)
+サーバーの起動
+python3 -m http.server 8000

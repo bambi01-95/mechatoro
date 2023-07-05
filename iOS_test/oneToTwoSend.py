@@ -102,11 +102,10 @@ def undistort():
         
         # # HSV->BGR変換
         # img = cv2.cvtColor(merge, cv2.COLOR_HSV2BGR) 
-
-
-
+        cv2.imshow("normal",img)
         img = cv2.putText(img,text,(mid_w-mid_h + 302 ,mid_h),cv2.FONT_HERSHEY_TRIPLEX,0.5,(30,30,30),1,cv2.LINE_AA)
         img = cv2.putText(img,text,(mid_w-mid_h + 300 ,mid_h),cv2.FONT_HERSHEY_TRIPLEX,0.5,(255,255,255),1,cv2.LINE_AA)
+
         imgL= img[:h, mid_w-mid_h -75: mid_w+mid_h -75]
         imgR= img[:h, mid_w-mid_h +75: mid_w+mid_h +75]
 
