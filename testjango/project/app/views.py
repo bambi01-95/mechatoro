@@ -26,9 +26,8 @@ def generate_frame():
     h,w = frame.shape[:2]
     print("h=",h,", w=",w)
 
-    
-    while True:
 
+    while True:
         count += 1
         # カメラからフレーム画像を取得
         ret, frame = capture.read()
