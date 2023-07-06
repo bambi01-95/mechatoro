@@ -1,9 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-# Create your views here.
-
-# def index(request):
-#     return render(request, 'app/index.html')
+# Create your views here
 
 import cv2
 from django.http import StreamingHttpResponse
@@ -23,17 +20,22 @@ def video_feed_view():
 def generate_frame():
     capture = cv2.VideoCapture(0)  # USBカメラから
     count = 0
+    if not capture.isOpened():
+        print("Capture is not opened.")
+    ret, frame = capture.read()
+    h,w = frame.shape[:2]
+    print("h=",h,", w=",w)
+
+    
     while True:
-        if not capture.isOpened():
-            print("Capture is not opened.")
-            break
+
         count += 1
         # カメラからフレーム画像を取得
         ret, frame = capture.read()
         if not ret:
             print("Failed to read frame.")
             break
-        if(count % 30 == 0):
+        if(count % 2 == 0):
             # フレーム画像バイナリに変換
             ret, jpeg = cv2.imencode('.jpg', frame)
             byte_frame = jpeg.tobytes()

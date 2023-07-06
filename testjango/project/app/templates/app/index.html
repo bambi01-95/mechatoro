@@ -5,12 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
 </head>
+<style>
+    body{
+        margin:0;
+    /* これがないとswift側で写真と同じようにリサイズができない */
+    }
+</style>
 <body>
-    <h1>hello world</h1>
-    <div>
-        <div id="image_area">
+        <div id="image_area" class="example8">
             <img src="/video_feed" width="810" height="540"/>
         </div>
-    </div>
 </body>
 </html>
