@@ -20,13 +20,14 @@ R_motor_spd = 10
 FrameSize = 800
 
 black_img = np.zeros((FrameSize,FrameSize,3), np.uint8)  
-# 送る相手
-sendToIp     = '192.168.0.31'
-sendToPort   = 8008#8008
 
-# this pc
-my_ip   = '192.168.0.31'
-my_port = 8080
+# PC(to)
+sendToIp   = '172.16.0.31'
+sendToPort = 8008#8008
+
+# RasPi(from)
+my_ip      = '172.68.0.31'
+my_port    = 8080
 
 DataSplitNum = 16
 
