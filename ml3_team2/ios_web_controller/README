@@ -1,0 +1,33 @@
+[/ios_web_controller]
+<controller>
+TATA app を起動して、（pc server）IPとPORTの設定を行う。
+webを選択する
+
+<monitor>
+TATA appでweb monitorを選択
+
+<RASPI>
+1.web serverを起動させる。
+2. rec.pyを開く
+line xx:
+line xx:
+を相手のPORTとIPに編集する。
+3.rec.pyを実行
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////
+<IP - portの調べ方>
+-PCはターミナルで、
+dir/$ ip addr
+
+-iPhoneは設定で、
+Wi-Fi -> 接続中のWi-Fiをクリック ->IP アドレス
+PORTは8080で固定
+
+<web serverの起動の仕方>
+1. /webserver/project/のディレクトリに移動する。
+2. /webserver/project/$ python3 manage.py runserver 00.00.00.00:8080

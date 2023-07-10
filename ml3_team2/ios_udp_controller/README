@@ -1,0 +1,36 @@
+[/ios_udp_controller]
+
+<RASPI>
+1. sen_rec.pyの
+line xx:
+line xx:
+を相手のPORTとIPに編集する。
+2. sen_rec.pyの
+line xx:
+line xx:
+を自身のPORTとIPに編集する。
+3. sen_rec.pyを実行
+
+<controller>
+IPとPORTの設定を行う。
+UDPを選択
+
+<monitor>
+スマホの場合は、
+monitorを選択
+
+PCの場合は、
+monitor.py
+line xx:
+line xx:
+を自身のIP&PORTを編集する。
+monitor.pyを実行する。
+
+
+<IP - portの調べ方>
+PCはターミナルで、
+dir/$ ip addr
+
+iPhoneは設定で、
+Wi-Fi -> 接続中のWi-Fiをクリック ->IP アドレス
+PORTは8080で固定

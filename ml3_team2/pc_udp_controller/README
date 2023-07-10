@@ -1,0 +1,41 @@
+[/pc_udp_controller]
+<controller> & <monitor>
+1. moni_con.pyの
+line xx:
+line xx:
+を自身のIP&PORTを編集する。
+2. moni_con.pyの
+line xx:
+line xx:
+を相手のIP&PORTを編集する。
+3. moni_con.pyを実行する。
+
+
+<RASPI>
+1. sen_rec.pyを開く
+line xx:
+line xx:
+を自身のPORTとIPに編集する。
+2. sen_rec.pyを開く
+line xx:
+line xx:
+を相手のPORTとIPに編集する。
+3. sen_rec.pyを実行
+
+
+
+
+
+
+////////////////////////////////////////////////////////////////////////
+<IP - portの調べ方>
+-PCはターミナルで、
+dir/$ ip addr
+
+-iPhoneは設定で、
+Wi-Fi -> 接続中のWi-Fiをクリック ->IP アドレス
+PORTは8080で固定
+
+<web serverの起動の仕方>
+1. /webserver/project/のディレクトリに移動する。
+2. /webserver/project/$ python3 manage.py runserver 00.00.00.00:8080

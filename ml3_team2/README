@@ -1,0 +1,44 @@
+bambi01-95 m058　
+
+[/ios_udp_controller]
+controller: ios app
+monitor: ios app / pc monitor
+
+[/ios_web_controller]
+controller: ios app
+monitor: ios app
+
+[/pc_udp_controller]
+controller: keyboard
+monitor: pc monitor
+
+[/pc]
+code for pc
+
+[/pc_web_controller]
+controller: web app
+monitor: web app
+
+[/raspi]
+code for raspi
+
+[/vr_udp_controller]
+controller: pc controller
+monitor: ios app 
+
+[/vr_web_controller]
+controller: pc controller
+monitor: ios app
+
+[/webserver]
+server code
+
+<pc>
+controller.py: send keyboard input to raspi
+monitor.py   : recive camera streaming from raspi
+moni_con.py  : send keyboard input to raspin and receive camera streaming from raspi
+
+<raspi>
+rec.py      : receive data by udp
+sen_rec.py  : receive data and send img data by udp
+websocket.py: recive data and send data by web socket

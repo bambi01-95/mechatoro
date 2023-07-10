@@ -1,0 +1,33 @@
+[/vr_web_controller]
+
+<RASPI>
+1. serverを起動する
+2. rec.pyを起動する。
+
+<controller>
+1. pc: controller.pyの
+line xx:
+line xx:
+を相手のアドレスにする。
+2. pc: controller.pyを実行する
+
+<monitor>
+1. TATA appでVRを選択する。
+2. 相手のアドレスに編集する。
+3. TATA appでVRを選択する
+2. STARTを押す
+
+
+
+////////////////////////////////////////////////////////////////////////
+<IP - portの調べ方>
+-PCはターミナルで、
+dir/$ ip addr
+
+-iPhoneは設定で、
+Wi-Fi -> 接続中のWi-Fiをクリック ->IP アドレス
+PORTは8080で固定
+
+<web serverの起動の仕方>
+1. /webserver/project/のディレクトリに移動する。
+2. /webserver/project/$ python3 manage.py runserver 00.00.00.00:8080

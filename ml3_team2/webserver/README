@@ -1,0 +1,12 @@
+<how to run>
+$ cd project
+$ cd manage.py runserver
+or
+$ cd manage.py runserver ip_addr:port 
+
+[system strcuture]
+/app -> このアプリでは全てのページの処理がここに入っている
+
+/project -> 言語設定などが入っている
+
+/stacic -> js/cssなどが入っている

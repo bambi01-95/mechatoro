@@ -1,0 +1,27 @@
+[/pc_web_controller]
+
+<RASPI>
+1. serverを起動する。
+2. WebSocketServer.pyの
+line xx:
+を自分ののIPに編集する。
+3. WebSocketServer.pyを実行する。
+
+<controller> & <monitor>
+1. http://server_ip:server_port/web/にアクセスする。
+2. IPとPORTをserverのIP&PORTにする
+3. connectを押す。
+
+
+////////////////////////////////////////////////////////////////////////
+<IP - portの調べ方>
+-PCはターミナルで、
+dir/$ ip addr
+
+-iPhoneは設定で、
+Wi-Fi -> 接続中のWi-Fiをクリック ->IP アドレス
+PORTは8080で固定
+
+<web serverの起動の仕方>
+1. /webserver/project/のディレクトリに移動する。
+2. /webserver/project/$ python3 manage.py runserver 00.00.00.00:8080
