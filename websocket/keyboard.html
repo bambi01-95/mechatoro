@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <!-- bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    
+</head>
+<script type="text/javascript" language="JavaScript" src="./js/webSocket.js"></script>
+<script type="text/javascript" language="JavaScript" src="./js/keytest.js"></script>
+<body>
+<!-- navbar top -->
+    <nav class="navbar navbar-light bg-light">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+            <h1><img src="./img/tata_app_logo.png" alt="" width="50" height="50" class="d-inline-block align-text-top">
+            TATA</h1>
+          </a>
+        </div>
+    </nav>
+<!-- main -->
+    <div class="container-fluid text-center">
+        <div class="row">
+            <div class="col-4 d-flex justify-content-center">
+       
+                        <table border="1"  id = "tbl">
+                            <tr>
+                                <td ><label id="lbl">IP</label></td>
+                                <td ><input type="text" id="Host" value = "192.168.0.31"></td>
+                     
+                                <td ><label id = "lbl">Port</label></td>
+                                <td ><input type="text" id="Port"  value = "5000"></td>
+                                <td id="btnTd" ><input type="button" class="text-center" value="connect" onclick="wsOpen()" id ="btn"></td>
+                        
+                            </tr>
+                        </table>
+                   
+            </div>
+            <div class="col-4 d-flex justify-content-center">
+                <table border="1"  id = "tbl">
+                    <tr>
+
+                        <td ><label id="lbl">status</label></td>
+                        <td ><input type="text" class="text-center" id="Status" value = "not connected"></td>
+                        <td id="btnTd" ><input type="button" class="text-center" value="disconnect" onclick="wsClose()" id ="btn"></td>
+                    </tr>
+                </table>
+            </div>
+            <div class="col-4 d-flex justify-content-center">
+                <fieldset id = "field">
+                        <table border="1" id = "tbl">
+                            <tr>
+                                <td ><label id = "lbl">send</label></td>
+                                <td ><input type="text" id="SndMsg" placeholder="outputdata"></td>
+
+                                <td><label id = "lbl">receive</label></td>
+                                <td><input type="text" id="RcvMsg" placeholder="comebackdata"></td>
+                            </tr>
+                        </table>
+                </fieldset>
+            </div>
+
+        </div>
+        <!-- first row -->
+        <div class="row">
+          <!-- left -->
+          <div class="col-3">
+
+            
+
+          </div>
+
+
+          <!-- middle -->
+          <div class="col-6">
+            <div id="image_area" class="example8">
+                <img src="/video_feed" width="640" height="480" class="bg-dark"/>
+            </div>
+          </div>
+
+
+          <!-- right -->
+          <div class="col-3">
+
+          </div>
+        </div>
+
+    <!-- second row -->
+        <div class="row">
+          <div class="col-3">
+            <!--  -->
+          </div>
+          <div class="col-6">
+            <div id="image_area" class="example8">
+                <img src="/video_feed" width="480" height="320" class="bg-dark"/>
+            </div>
+          </div>
+          <div class="col-3">
+            <!--  -->
+          </div>
+        </div>
+      </div>
+
+
+
+    <span style="font-size:18px;">キー入力</span><p id="output"></p>
+</body>
+</html>

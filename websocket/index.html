@@ -1,0 +1,110 @@
+<!-- index.html --> 
+<!DOCTYPE html>
+<html lang="ja">
+    <head>
+        <meta charset="UTF-8">
+        <title>WebSocket 接続</title>
+        <link rel="stylesheet" href="style.css">
+    </head>
+    
+    <script type="text/javascript" language="JavaScript" src="./js/webSocket.js"></script>
+    <script type="text/javascript" language="JavaScript" src="./js/remote.js"></script>
+
+    <body>
+        <h1>WebSocketリモート接続</h1>
+
+        <fieldset id = "field">
+        <legend>接続先</legend>
+            <table border="1"  id = "tbl">
+                <tr>
+                    <td ><label id="lbl">IPアドレス</label></td>
+                    <td ><input type="text" id="Host" value = "192.168.1.13"></td>
+                    <td rowspan="2" id="btnTd"><input type="button" value="接続" onclick="wsOpen()" id ="btn"></td>
+                </tr>
+
+                <tr>
+                    <td ><label id = "lbl">Port番号</label></td>
+                    <td ><input type="text" id="Port"  value = "5000"></td>
+                </tr>
+
+                <tr>
+                    <td ><label id="lbl">ステータス</label></td>
+                    <td ><input type="text" id="Status" value = "切断中"></td>
+                    <td id="btnTd" ><input type="button" value="切断" onclick="wsClose()" id ="btn"></td>
+                </tr>
+            </table>
+        </fieldset>
+
+        <fieldset id = "field">
+        <legend>送受信</legend>
+            <table border="1" id = "tbl">
+                <tr>
+                    <td ><label id = "lbl">送信メッセージ</label></td>
+                    <td ><input type="text" id="SndMsg" placeholder="送信メッセージを入力"></td>
+                    <td  rowspan="2"  id ="btnTd" ><input type="button" value="送信" onclick="sendMsg()" id ="btn"></td>
+                </tr>
+
+                <tr>
+                    <td><label id = "lbl">受信メッセージ</label></td>
+                    <td><input type="text" id="RcvMsg" placeholder="受信メッセージ"></td>
+                </tr>
+            </table>
+        </fieldset>
+
+        <fieldset id = "field">
+        <legend>速度・加速度</legend>
+            <table border="1" id = "tbl">
+                <tr>
+                    <td id = "lbl">速　度</td>
+                    <td style="text-align: center"><input type="text" id="spd" value = 0 style="text-align: center; WIDTH: 120px;"></td>
+                    <td id="btnTd"><input type="button"  value="-"  onClick="valueDown(0)" id ="btn"></td>
+                    <td id="btnTd"><input type="button"  value="+" onClick="valueUp(0)" id ="btn"></td>
+                </tr>
+
+                <tr>
+                    <td id = "lbl">加速度</td>
+                    <td style="text-align: center"><input type="text" id="acc" value = 0 style="text-align: center; WIDTH: 120px;"></td>
+                    <td id="btnTd"><input type="button"  value="-"  onClick="valueDown(1)" id ="btn"></td>
+                    <td id="btnTd"><input type="button"  value="+" onClick="valueUp(1)" id ="btn"></td>
+                </tr>
+            </table>
+        </fieldset>
+
+        <fieldset id = "field">
+        <legend>単位</legend>
+            <table border="1" id = "tbl">
+                <tr>
+                    <td id = "radio">
+                        <form name="formName0">
+                        <div id="radioarea" onChange="unitChange()";>
+                        <input type="radio" name="choice" value=1>1
+                        <input type="radio" name="choice" value=10 checked>10
+                        <input type="radio" name="choice" value=100>100
+                        <input type="radio" name="choice" value=1000>1000
+                        <input type="radio" name="choice" value=10000>10000
+                        </div>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </fieldset>
+
+        <fieldset id = "field">
+        <legend>キーボード</legend>
+            <table border="0" id = "tbl">
+                <tr>
+                    <td colspan = "3" id="keyTd"><input type="button"  value="↑" onClick="keyBd('1')" id = "keyBtn" ></td>
+                </tr>
+                <tr>
+                    <td id="keyTdL"><input type="button"  value="←"  onClick="keyBd('2')" id = "keyBtn"></td>
+                    <td id="keyTd"><input type="button"  value="□"  onClick="keyBd('0')" id = "keyBtn"></td>
+                    <td id="keyTdR"><input type="button"  value="→" onClick="keyBd('3')" id = "keyBtn" ></td>
+                </tr>
+                <tr>
+                    <td colspan = "3" id="keyTd"><input type="button"  value="↓" onClick="keyBd('4')" id = "keyBtn" ></td>
+                </tr>
+            </table>
+        </fieldset>
+
+    </body>
+</html>
