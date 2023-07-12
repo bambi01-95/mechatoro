@@ -20,9 +20,11 @@ function wsOpen() {
         connected = false;
     };
 
-    //メッセージ受信
+    //メッセージ受信 change
     connection.onmessage = function(event) {
-        document.getElementById("RcvMsg").innerHTML = event.data;
+        let data =  event.data.split(',',2);
+        document.getElementById("RcvMsg").innerHTML = data[0]
+        document.getElementById("RcvMsg").innerHTML = data[1]
     };
     
     //切断

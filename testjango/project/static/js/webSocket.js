@@ -48,3 +48,5 @@ function sendCmnd(cmnd) {
     document.getElementById("SndMsg").value = cmnd;
     connection.send(cmnd);
 }
+
+//sudo pip3 install websocket-server

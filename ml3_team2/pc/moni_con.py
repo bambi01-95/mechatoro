@@ -64,23 +64,31 @@ def send_key_input(key,udp,addr):
     L_out = 0
     R_out = 0
 
-    if key[pygame.K_w] == 1:
-        L_out = L_motor_spd
-        R_out = R_motor_spd
-
-    if key[pygame.K_a] == 1:
-        R_out = R_motor_spd
-        if L_out != 0:
-            L_out = int(L_out/2)
-
-    if key[pygame.K_d] == 1:
-        L_out = L_motor_spd
-        if R_out != 0:
-            R_out = int(R_out / 2)
-        
+    wad = str(key[pygame.K_w]) + str(key[pygame.K_a]) + str(key[pygame.K_d])
+    wad = int(wad,2)
     if key[pygame.K_s] == 1:
         L_motor_spd *= -1
         R_motor_spd *= -1
+        wad = wad ^ 0b011
+
+    if(wad==0b111)|(wad==0b100):
+        L_out = L_motor_spd
+        R_out = R_motor_spd
+    elif(wad==0b110):
+        L_out = L_motor_spd
+        R_out = R_motor_spd / 2
+    elif(wad==0b010):
+        L_out = L_motor_spd
+        R_out = 0
+    elif(wad==0b101):
+        L_out = L_motor_spd / 2
+        R_out = R_motor_spd 
+    elif(wad==0b001):
+        L_out = 0
+        R_out = R_motor_spd
+    else:
+        L_out = 0
+        R_out = 0
 
     if (key[pygame.K_c] == 1) & (key[pygame.K_LCTRL] == 1):
         print("C + cotrol: FINISH!")
