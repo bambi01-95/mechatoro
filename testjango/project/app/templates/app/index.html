@@ -8,12 +8,16 @@
     <style>
         body{
             margin:0;
-        /* これがないとswift側で写真と同じようにリサイズができない */
+        }
+        .example{
+            display: block;
+            width: 100%;
+            height: auto;
         }
     </style>
     <body>
-            <div id="image_area" class="example8">
-                <img src="/video_feed" width="500" height="300"/>
+            <div id="image_area" >
+                <img src="/video_feed" class="example"/>
             </div>
     </body>
 </html>

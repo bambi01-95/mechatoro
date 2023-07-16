@@ -12,8 +12,8 @@ for i in range(2):
         wad = j
         s = i
         if(s&1):
-             wad = wad ^ 0b011
-        
+            wad = int(wad,2)
+            wad = '{0:03b}'.format(wad ^ 0b011)
         if(wad&0b111)|(wad&0b100): #forward
             l_out_spd = l_set_spd
             r_out_spd = r_set_spd

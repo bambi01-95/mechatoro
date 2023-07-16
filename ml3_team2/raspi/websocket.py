@@ -8,8 +8,7 @@ import rospy
 import time
 import numpy as np
 from std_msgs.msg import Int16MultiArray
-import socket
-
+import RPi.GPIO as GPIO
 
 # raspi 
 HOST = "172.31.33.254" # IPアドレスopen
@@ -53,8 +52,53 @@ wsServer = WsServer(HOST, PORT)
 def wsStart():
     wsServer.runServer()
 
+"""
+    for servo motor
+""" 
+# サーボモータ1の制御に使用するGPIOピン番号
+servo1_pin = 18
+ 
+# サーボモータ2の制御に使用するGPIOピン番号
+servo2_pin = 19
+ 
+# サーボモータの最小角度と最大角度（調整が必要な場合は適宜変更してください）
+min_angle = 40
+max_angle = 180
+ 
+# サーボモータの初期角度
+initial_angle1 = 110
+initial_angle2 = 110
+
+# サーボモータの増減角度
+step_angle = 0.5
+ 
+# 初期化
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(servo1_pin, GPIO.OUT)
+GPIO.setup(servo2_pin, GPIO.OUT)
+ 
+# PWMインスタンスを作成
+pwm1 = GPIO.PWM(servo1_pin, 50)  # サーボモータ1のPWM周波数を50Hzに設定
+pwm2 = GPIO.PWM(servo2_pin, 50)  # サーボモータ2のPWM周波数を50Hzに設定
+pwm1.start(0)  # PWM出力を開始
+pwm2.start(0)  # PWM出力を開始
+ 
+# サーボモータ1を指定した角度に移動する関数
+def move_servo1(angle):
+    angle = max(min(angle, max_angle), min_angle)  # 角度を上限と下限の範囲内に制限
+    duty_cycle = (angle / 18) + 2  # デューティ比を計算
+    pwm1.ChangeDutyCycle(duty_cycle)
+ 
+# サーボモータ2を指定した角度に移動する関数
+def move_servo2(angle):
+    angle = max(min(angle, max_angle), min_angle)  # 角度を上限と下限の範囲内に制限
+    duty_cycle = (angle / 18) + 2  # デューティ比を計算
+    pwm2.ChangeDutyCycle(duty_cycle)
 
 
+"""
+    for motor driver
+"""
 def set_motor_value(l_vel,r_vel):
     msg = Int16MultiArray()
     msg.data.append(l_vel)
@@ -69,11 +113,10 @@ def limit_vel(vel):
 def publish_motor_spd(pub, l_spd,r_spd):
     pub.publish( set_motor_value(l_spd,r_spd) )
 
-
 def key_to_spd(data):
     global l_set_spd,r_set_spd
     wad,s,i,j = data.split(",")
-    wad = int(wad,2)
+
     # chagnge l and r _set_spd
     if(i=="1"):
         l_set_spd += 10
@@ -90,27 +133,42 @@ def key_to_spd(data):
     if(s=="1"):
         l_set_spd *= -1
         r_set_spd *= -1
-        wad = wad ^ 0b011  # if back
+        wad = int(wad,2)
+        wad = '{0:03b}'.format(wad ^ 0b011)
 
     # set l and r _out_spd
-    if(wad&0b111)|(wad&0b100):
+    if(wad=="111")|(wad=="100"):
         l_out_spd = l_set_spd
         r_out_spd = r_set_spd
-    elif(wad&0b110):
+    elif(wad=="110"):
         l_out_spd = l_set_spd
         r_out_spd = int(r_set_spd / 2)
-    elif(wad&0b010):
+    elif(wad=="010"):
         l_out_spd = l_set_spd
         r_out_spd = 0
-    elif(wad&0b101):
+    elif(wad=="101"):
         l_out_spd = int(l_set_spd / 2)
         r_out_spd = r_set_spd 
-    elif(wad&0b001):
+    elif(wad=="001"):
         l_out_spd = 0
         r_out_spd = r_set_spd
     else:
         l_out_spd = 0
         r_out_spd = 0
+
+    if command == 'a':  # aキー
+            initial_angle1 = min(initial_angle1 + step_angle, max_angle)
+            move_servo1(initial_angle1)
+    elif command == 'd':  # dキー
+            initial_angle1 = max(initial_angle1 - step_angle, min_angle)
+            move_servo1(initial_angle1)
+            
+    elif command == 'j':  # jキー
+            initial_angle2 = min(initial_angle2 + step_angle, max_angle)
+            move_servo2(initial_angle2)
+    elif command == 'l':  # lキー
+            initial_angle2 = max(initial_angle2 - step_angle, min_angle)
+            move_servo2(initial_angle2)
 
     print("Receive data = ", wad,"s",s,"j",j,"i",i)
     print("Lset",l_set_spd,"Rset",r_set_spd)
@@ -118,7 +176,7 @@ def key_to_spd(data):
 
     return l_out_spd,r_out_spd
 
-
+# result = [(ord(a) ^ ord(b)) for a, b in zip(string1, string2)]
 
 def main():
     rospy.init_node("bringup_controller")

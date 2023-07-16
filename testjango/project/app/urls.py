@@ -10,6 +10,7 @@ urlpatterns = [
     path('stream/', views.IndexView.as_view(),name="stream"),
     # for web app
     path('web/', views.webView.as_view(),name="web"),
+    
     # 前方カメラの出力
     path('video_feed/', views.video_feed_view_f(), name="video_feed"),
     # 後方カメラの出力

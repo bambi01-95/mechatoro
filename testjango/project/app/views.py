@@ -9,9 +9,9 @@ from django.views import View
 import time
 import numpy as np
 
+import socket
 def homeView(request):
     return render(request, 'app/home.html')
-
 
 """
     for normarl view
@@ -21,72 +21,109 @@ class IndexView(View):
     def get(self, request):
         return render(request, 'app/index.html', {})
     
-# web app用のページストリーミング
-class webView(View):
-    def get(self, request):
-        return render(request, 'app/gamescreen.html', {})
+
     
 # 前カメラの映像出力
 def video_feed_view_f():
     return lambda _: StreamingHttpResponse(generate_frame_forward(), content_type='multipart/x-mixed-replace; boundary=frame')
 
+def recive(udp,number):
+    global getimg
+    if(number == 0):
+        buff = 1024 * 64
+        while True:
+            recive_data = bytes()
+            count = 0
+            # 画像データの受け取り
+            while True:
+                jpg_str, addr = udp.recvfrom(buff)
+                is_len = len(jpg_str) == 7
+                is_end = jpg_str == b'__end__' 
+                if is_len and is_end: #　*1
+                    break
+                count += 1
+                recive_data += jpg_str
+            if len(recive_data) == 0: continue
+
+            # string型からnumpyを用いuint8に戻す
+            narray = np.frombuffer(recive_data, dtype='uint8')
+
+            # uint8のデータを画像データに戻す
+            getimg = cv2.imdecode(narray, 1)
+            yield getimg,1
+    else:
+        while True:
+            yield getimg,0
+
+number = 0
+udp_recive = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+udp_recive.bind(('172.31.33.254',8080))
+
 # 前かめらの映像取得
 def generate_frame_forward():
-    capture = cv2.VideoCapture(0)  # USBカメラから
-    count = 0
-    if not capture.isOpened():
-        print("Capture is not opened.")
-    ret, frame = capture.read()
-    h,w = frame.shape[:2]
-    print("h=",h,", w=",w)
-
-
-    while True:
-        count += 1
-        # カメラからフレーム画像を取得
-        ret, frame = capture.read()
-        if not ret:
-            print("Failed to read frame.")
-            break
-        if(count % 2 == 0):
+    global number,udp_recive,count
+    DataSplitNum = 36
+    id = number
+    number += 1
+    check = count
+    for img,i in recive(udp_recive,id):
+        try:         
             # フレーム画像バイナリに変換
-            ret, jpeg = cv2.imencode('.jpg', frame)
+            ret, jpeg = cv2.imencode('.jpg', img)
             byte_frame = jpeg.tobytes()
             # フレーム画像のバイナリデータをユーザーに送付する
-            yield (b'--frame\r\n'
-                b'Content-Type: image/jpeg\r\n\r\n' + byte_frame + b'\r\n\r\n')
-    capture.release()
+            yield (b'--frame\r\n'b'Content-Type: image/jpeg\r\n\r\n' + byte_frame + b'\r\n\r\n')
+        except cv2.error:
+            print("img empty\n")
+
+        
+
+ 
+# web app用のページストリーミング
+class webView(View):
+    def get(self, request):
+        return render(request, 'app/indexback.html', {})
 
 # 後ろカメラの映像出力
 def video_feed_view_b():
     return lambda _: StreamingHttpResponse(generate_frame_back(), content_type='multipart/x-mixed-replace; boundary=frame')
 
+def capread(id):
+    global capimg
+    if(id==0):
+        capture = cv2.VideoCapture(1)  # USBカメラから
+        if not capture.isOpened():
+            print("Capture is not opened.")
+        while True:
+            ret, frame = capture.read()
+            capimg = frame
+            yield capimg
+    else:
+        while True:
+            time.sleep(0.03)
+            yield capimg
+    print("disconnect")
+    capture.release()
+
+
+
+backnumber = 0
+
 # 後ろカメラの映像取得
 def generate_frame_back():
-    capture = cv2.VideoCapture(0)  # USBカメラから
-    count = 0
-    if not capture.isOpened():
-        print("Capture is not opened.")
-    ret, frame = capture.read()
-    h,w = frame.shape[:2]
-    print("h=",h,", w=",w)
-
-
-    while True:
-        count += 1
-        # カメラからフレーム画像を取得
-        ret, frame = capture.read()
-        if not ret:
-            print("Failed to read frame.")
-            break
-        if(count % 2 == 0):
+    global backnumber
+    id = backnumber
+    backnumber += 1
+    for frame in capread(id):
             # フレーム画像バイナリに変換
-            ret, jpeg = cv2.imencode('.jpg', frame)
-            byte_frame = jpeg.tobytes()
-            # フレーム画像のバイナリデータをユーザーに送付する
-            yield (b'--frame\r\n'
-                b'Content-Type: image/jpeg\r\n\r\n' + byte_frame + b'\r\n\r\n')
-    capture.release()
+        ret, jpeg = cv2.imencode('.jpg', frame)
+        byte_frame = jpeg.tobytes()
+        # フレーム画像のバイナリデータをユーザーに送付する
+        yield (b'--frame\r\n'
+            b'Content-Type: image/jpeg\r\n\r\n' + byte_frame + b'\r\n\r\n')
+    
+
+
 
 """
     for VR
@@ -141,14 +178,12 @@ def vr_frame():
     for i in range(256):
         img2gamma[i][0] = 255 * (float(i)/255) ** (1.0 /gamma)
 
-
-    while True:
+    global backnumber
+    id = backnumber
+    backnumber += 1
+    for img in capread(id):
         count += 1
         # カメラからフレーム画像を取得
-        ret, img = capture.read()
-        if not ret:
-            print("Failed to read frame.")
-            break
 
         text = "speed 123 m/s"
     # 映像を明るく
